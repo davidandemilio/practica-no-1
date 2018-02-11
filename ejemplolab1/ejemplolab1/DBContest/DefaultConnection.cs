@@ -12,8 +12,13 @@ namespace ejemplolab1.DBContest
         private static volatile DefaultConnection Instance;
         private static object syncRoot = new Object();
 
-        public ListaOriginal<Jugador> Jugadores = new ListaOriginal<Jugador>();
-        public ListaOriginal<string> Ids = new ListaOriginal<string>();
+        public List<Jugador> Jugadores = new List<Jugador>();
+        public List<string> Ids = new List<string>();
+        public int IDActual { get; set; }
+       
+     private  DefaultConnection(){
+     IDActual=0;
+    }
 
         public static DefaultConnection getInstance
         {
@@ -34,5 +39,7 @@ namespace ejemplolab1.DBContest
                 return Instance;
             }
         }
+
+    
     }
 }

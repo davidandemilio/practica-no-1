@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using ejemplolab1.DBContest;
 using ejemplolab1.Models;
+using System.Net;
+
 namespace ejemplolab1.Controllers
 {
     public class JugadorController : Controller
@@ -14,7 +16,7 @@ namespace ejemplolab1.Controllers
         public ActionResult Index()
         {
      
-            return View(db.Jugadores.obtenerListado());
+            return View(db.Jugadores.ToList());
         }
 
         // GET: Jugador/Details/5
@@ -36,7 +38,8 @@ namespace ejemplolab1.Controllers
             try
             {
                 // TODO: Add insert logic here
-                db.Jugadores.Insertar(jugador);
+                jugador.jugadorid = ++db.IDActual;
+                db.Jugadores.Add(jugador);
                 return RedirectToAction("Index");
             }
             catch
@@ -46,24 +49,44 @@ namespace ejemplolab1.Controllers
         }
 
         // GET: Jugador/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Jugador jugadorBuscado = db.Jugadores.Find(x => x.jugadorid == id);
+
+            if (jugadorBuscado == null)
+            {
+
+                return HttpNotFound();
+            }
+            return View(jugadorBuscado);
         }
 
         // POST: Jugador/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+    [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include="jugadorid,nombre,apellido,salario,posision")]Jugador jugador)
         {
             try
             {
                 // TODO: Add update logic here
-
+                Jugador jugadorbuscado = db.Jugadores.Find(x => x.jugadorid == jugador.jugadorid);
+                if (jugadorbuscado == null)
+                {
+                    return HttpNotFound();
+                }
+                jugadorbuscado.nombre = jugador.nombre;
+                jugadorbuscado.apellido = jugador.apellido;
+                jugadorbuscado.salario = jugador.salario;
+                jugadorbuscado.posiscion = jugador.posiscion;
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View("Index");
             }
         }
 
