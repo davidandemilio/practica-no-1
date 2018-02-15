@@ -10,7 +10,7 @@ namespace ejemplolab1.Models
         public int jugadorid{get;set;}
         public string nombre { get; set; }
         public string apellido { get; set; }
-        public int salario { get; set; }
+        public double salario { get; set; }
         public string posiscion { get; set; }
     }
 }
